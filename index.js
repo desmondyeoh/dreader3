@@ -155,6 +155,7 @@ pageWid.loadWid = function() {
     bindWordDictionary();
 
     function showPPTWordByWord() {
+      console.debug("desc|book:", book);
       var words = ds.getBookPPT(book).trim().replace("\n", "").split(" ");
       $page.empty();
       for (var i = 0, l = words.length; i < l; i++) {

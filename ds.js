@@ -306,8 +306,8 @@ ds.getBookPPT = function(book){
 ds.repositionPaperclip = function(book, old_num_of_pages){
   // book.paperclip is old paperclip
   var progress = book.paperclip / old_num_of_pages;
-  // book.pages.length is new_num_of_pages
-  book.paperclip = Math.floor(progress * book.pages.length);
+  // book.pages.length is new_num_of_pages, if 0, then 1
+  book.paperclip = Math.floor(progress * book.pages.length) || 1;
 }
 
 //////////////////////////////////////////
