@@ -370,10 +370,10 @@ bookNavWid.loadWid = function() {
         for(var i=0, l=hlTextList.length; i<l; i++){
           var hlText = hlTextList[i];
           console.debug("desc|hlText:", hlText);
-          $innerMod.append('- '+ hlText[1] + '<br>');
+          $innerMod.append(hlText[1] + '<br>');
           delBtnEl = document.createElement('button');
           delBtnEl.value = hlText[0];
-          delBtnEl.textContent = 'DELETE';
+          delBtnEl.textContent = 'Del';
           // delbtn click
           delBtnEl.addEventListener('click', function(e){
             console.debug("desc|e:", e.target.value);
@@ -388,7 +388,7 @@ bookNavWid.loadWid = function() {
             }
           });
           $innerMod.append(delBtnEl);
-          $innerMod.append('<br>');
+          $innerMod.append('<br><br>');
         }
       }
     })();

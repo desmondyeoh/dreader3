@@ -174,9 +174,9 @@ dh.getChildSize = function (child, parentFrm, parentSize) {
 dh.initMod = function(){
   $mod = $('<div id="mod">');
   $innerMod = $('<div id="inner-mod">');
+  $mod.allowScrollingY();
   $mod.append($innerMod);
   $mod.hide();
-  $mod.allowScrollingY();
   $mod.hammer().on('swipe', function(e) {
     $mod.hide();
   });

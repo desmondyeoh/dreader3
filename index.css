@@ -7,10 +7,10 @@
   background: #eee;
 }
 .wid{
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 #mod{
-  border: 1px solid black;
+  border-radius: 10px;
   background: white;
   width: 90vw;
   height: 90vh;
@@ -23,6 +23,11 @@
 }
 #inner-mod{
   
+}
+/* moddelbtn */
+#inner-mod button{
+  float:right;
+  margin-top: 3px;
 }
 
 /* libscr */
@@ -59,9 +64,15 @@
 
 /* nav */
 .navbtn{
-  background:#ddd;
+  background:white;
   float:left;
   height:100%;
+  border-right:2px solid #d8dad3;
+  border-radius: 15px 5px 0 0;
+  width: 33vw;
+  text-align:center;
   line-height:2em;
   padding: 0 10px;
+}
+.navbtn:last-of-type{
 }
