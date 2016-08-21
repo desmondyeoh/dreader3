@@ -20,8 +20,8 @@ dx.setAppHomeScr = function(app, scrName) {
 }
 
 dx.runApp = function(app) {
-  ds.lsto.flush();
-  if (ds.lsto.isExist('curScrName')) {
+   localStorage.clear();
+  if (localStorage.getItem('curScrName')) {
     var curScr = app.screens[ds.lsto.load('curScrName')];
     dx.gotoScr(curScr);
   }
@@ -59,6 +59,7 @@ dx.gotoScr = function(scr, opt) {
   ds.lsto.save('curScrName', scr.name);
   scr.opt = opt;
   $('body').empty().append(scr.$scr);
+  dh.initMod();
   dh.initFrm(scr.rFrm);
 }
 
@@ -170,9 +171,52 @@ dh.getChildSize = function (child, parentFrm, parentSize) {
   return {width, height};
 }
 
+dh.initMod = function(){
+  $mod = $('<div id="mod">');
+  $innerMod = $('<div id="inner-mod">');
+  $mod.append($innerMod);
+  $mod.hide();
+  $mod.allowScrollingY();
+  $mod.hammer().on('swipe', function(e) {
+    $mod.hide();
+  });
+  $('body').append($mod);
+}
+
 //////////////////////////////////////////
 // globalutil
 //////////////////////////////////////////
 
 
 
+//////////////////////////////////////////
+// jqext
+//////////////////////////////////////////
+
+// $.allowScrolling: depends on iNoBounce.js
+jQuery.fn.allowScrollingX = function() {
+  var $el = this;
+  $el.css({
+    'overflow-x':'auto', 
+    'overflow-y':'hidden', 
+    '-webkit-overflow-scrolling':'touch'
+  });
+  return $el;
+}
+jQuery.fn.allowScrollingY = function() {
+  var $el = this;
+  $el.css({
+    'overflow-x':'hidden', 
+    'overflow-y':'auto', 
+    '-webkit-overflow-scrolling':'touch'
+  });
+  return $el;
+}
+jQuery.fn.allowScrolling = function() {
+  var $el = this;
+  $el.css({
+    'overflow':'auto', 
+    '-webkit-overflow-scrolling':'touch'
+  });
+  return $el;
+}

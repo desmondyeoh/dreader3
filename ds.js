@@ -21,14 +21,6 @@ ds.lsto.load = function (item_key){
   return JSON.parse(localStorage.getItem(item_key));
 };
 
-ds.lsto.isExist = function(item_key) {
-  return this.load(item_key) != null;
-};
-
-ds.lsto.flush = function() {
-  localStorage.clear();
-};
-
 
 /* Paginator
 *****************************************/
@@ -123,6 +115,9 @@ ds.BookServer = function (book_folder_url){
   }
 }
 
+
+/* Dictionary
+*****************************************/
 ds.Dictionary = function() {
   var api_key = "?key="+"8d3c1550-6d45-4b66-adb9-c6772066a68c";
   var website = "http://www.dictionaryapi.com/api/v1/references/collegiate/xml/";
@@ -279,6 +274,7 @@ ds.model = function(){}
 /* Book
 *****************************************/
 ds.model.Book = function(filename, text) {
+  this.bookFilename = filename;
   this.bookTitle = filename.replace(".txt", "");
   this.viewportSize = {x: $(window).outerWidth(), y: $(window).outerHeight()};
   this.text = text;
@@ -293,16 +289,6 @@ ds.model.Book = function(filename, text) {
     return this.pages[page_num -1];
   };
 
-  this.repositionPaperclip = function(old_num_of_pages) {
-    var old_num_of_pages = old_num_of_pages;
-    var new_num_of_pages = this.pages.length;
-    var old_paperclip = this.paperclip;
-
-    var progress = old_paperclip / old_num_of_pages;
-    var new_paperclip = Math.floor(progress * new_num_of_pages);
-
-    this.paperclip = new_paperclip; 
-  };
   this.isFirstPage = function(){
     return ( this.paperclip == 1 );
   }
@@ -310,13 +296,23 @@ ds.model.Book = function(filename, text) {
     return ( this.paperclip == this.pages.length );
   }
 }
+ds.getPageText = function(book, page_num){
+  return book.pages[page_num -1];
+}
 ds.getBookPPT = function(book){
   return book.pages[book.paperclip -1];
+}
+ds.repositionPaperclip = function(book, old_num_of_pages){
+  // book.paperclip is old paperclip
+  var progress = book.paperclip / old_num_of_pages;
+  // book.pages.length is new_num_of_pages
+  book.paperclip = Math.floor(progress * book.pages.length);
 }
 
 //////////////////////////////////////////
 // CONTROLLER
 //////////////////////////////////////////
+/*
 ds.ctrl = function(){}
 
 ds.ctrl.Dictionary = function(){
@@ -351,8 +347,10 @@ ds.ctrl.Dictionary = function(){
     });
   }
 }
+*/
 /* Page
 *****************************************/
+/*
 ds.ctrl.Page = function(){
   var dictionaryCtrl = new ds.ctrl.Dictionary();
   var highlighter = new ds.Highlighter();
@@ -444,4 +442,4 @@ ds.ctrl.Page = function(){
     });
   }
 }
-
+*/
