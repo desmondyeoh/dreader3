@@ -56,7 +56,7 @@ dx.addRFrmToScr(bvFrm, bookScr);
 /* libloadwids
 *****************************************/
 shelfWid.loadWid = function(){
-  var bs = new ds.BookServer('http://'+location.host+'/books');
+  var bs = new ds.BookServer(window.location.href+'/books');
   var $shelf = $('<div class="shelf">');
   shelfWid.$wid.append($shelf);
 
