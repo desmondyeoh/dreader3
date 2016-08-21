@@ -229,8 +229,8 @@ pageWid.loadWid = function() {
                   slice(0, lastWordPos[1]+1).
                   join(' ');
                 var middlePagesText = ' ';
-                for (var i = firstPc + 1, l = lastPc -1; i<l; i++){
-                  middlePagesText += book.pages[i];
+                for (var i = firstPc , l = lastPc -1; i<l; i++){
+                  middlePagesText += book.pages[i] + ' ';
                 }
                 hlText = firstPageText + middlePagesText + lastPageText;
                 console.debug("desc|hlText:", hlText);
