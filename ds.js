@@ -145,7 +145,8 @@ ds.Dictionary = function() {
   this.defineWord = function(word, callback) {
     $.ajax({
       type: "GET",
-      url: website + word + api_key,
+      url: 'mwdictapi.php',
+      data: "word="+word,
       success: function(data_xml) {
         entry_list = that.createEntryList(data_xml);
         console.debug("entry_list", entry_list);
