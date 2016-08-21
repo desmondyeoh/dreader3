@@ -109,7 +109,7 @@ ds.BookServer = function (book_folder_url){
   };
 
   this.loadBookText = function(filename, cb) {
-    this.fileServer.loadFile(this.folder_url +filename, function(file_content){
+    this.fileServer.loadFile(this.folder_url +filename.trim(), function(file_content){
       cb(file_content);
     });
   }

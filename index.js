@@ -56,10 +56,10 @@ dx.addRFrmToScr(bvFrm, bookScr);
 /* libloadwids
 *****************************************/
 shelfWid.loadWid = function(){
-  var bs = new ds.BookServer(window.location.href+'/books');
   var $shelf = $('<div class="shelf">');
   shelfWid.$wid.append($shelf);
 
+  var bs = new ds.BookServer(window.location.href+'books');
   bs.loadBookFilenames(function(bookFilename){
     $book = $('<div class="book">');
     $book.text(bookFilename);
@@ -134,7 +134,7 @@ pageWid.loadWid = function() {
   else {
     $page.html('<span style="font-size:0.4em">Loading <b>'+bookFilename+'</b> from the server.<br>This might take a while the first time.<br> Please be patient :)</span>');
     console.debug("book not saved locally");
-    var bs = new ds.BookServer('http://'+location.host+'/books');
+    var bs = new ds.BookServer(window.location.href+'books');
     bs.loadBookText(bookFilename, function(bookText){
       ds.lsto.save('curBookFilename', bookFilename);
       book = new ds.model.Book(bookFilename, bookText);
