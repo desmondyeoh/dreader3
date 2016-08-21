@@ -74,8 +74,9 @@ shelfWid.loadWid = function(){
 /* bookloadwids
 *****************************************/
 panelWid.loadWid = function() {
-  var $panel = $('<div id="inner-top-panel">');
+  panelWid.$wid.addClass('panel');
   panelWid.$wid.allowScrollingY();
+  var $panel = $('<div id="inner-top-panel">');
   panelWid.$wid.append($panel);
 }
 
@@ -330,10 +331,11 @@ pageWid.loadWid = function() {
 
 bookNavWid.loadWid = function() {
   bookNavWid.$wid.empty();
+  bookNavWid.$wid.addClass('navbar');
 
   // goLib
   $goLibNb = $('<div class="navbtn">goLib</div>');
-  $goLibNb.click(function(){dx.gotoScr(libScr)});
+  $goLibNb.hammer().on('click', function(){dx.gotoScr(libScr)});
   bookNavWid.$wid.append($goLibNb);
 
   // hlt
@@ -341,7 +343,7 @@ bookNavWid.loadWid = function() {
   if (localStorage.getItem('isHlMode')){
     $hltNb.css({'background':'yellow'});
   };
-  $hltNb.click(function(){
+  $hltNb.hammer().on('click', function(){
     if( localStorage.getItem('isHlMode') ) {
       console.debug("highlight mode OFF");
       localStorage.removeItem('isHlMode');
@@ -358,7 +360,7 @@ bookNavWid.loadWid = function() {
 
   // hlText
   $hlTextNb = $('<div class="navbtn" id="hlTextNb">hlText</div>');
-  $hlTextNb.click( function(e) {
+  $hlTextNb.hammer().on('click',  function(e) {
     console.debug("clicked");
     $('#mod').show();
     $innerMod = $('#inner-mod');

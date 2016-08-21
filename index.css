@@ -51,6 +51,9 @@
 }
 /* bookscr */
 /* panelwid */
+.panel{
+  border-bottom: 2px solid #d8dad3;
+}
 #inner-top-panel{
   padding: 3px 10px;
 }
@@ -63,12 +66,15 @@
 }
 
 /* nav */
+.navbar{
+  padding-left:1vw;
+}
 .navbtn{
   background:white;
   float:left;
   height:100%;
   border-right:2px solid #d8dad3;
-  border-radius: 15px 5px 0 0;
+  border-radius: 10px 5px 0 0;
   width: 33vw;
   text-align:center;
   line-height:2em;
