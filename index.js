@@ -265,11 +265,11 @@ pageWid.loadWid = function() {
               localStorage.setItem('hlPc', book.paperclip);
             }
           }
-          // if not highlight, click=define word
+          // if not highlight, click=dict
           else{
             var pureWord = e.target.innerHTML.replace(/[:., ]+/g, "");
             console.debug("desc|pureWord:", pureWord);
-            $panel = $('#top-panel');
+            $panel = $('#inner-top-panel');
             $panel.empty();
             $panel.html('Looking for <b>'+pureWord+'</b> in dictionary...');
             // search for word in dictionary
@@ -361,18 +361,36 @@ bookNavWid.loadWid = function() {
     console.debug("clicked");
     $('#mod').show();
     $innerMod = $('#inner-mod');
-    var htlHTML = '<b>Highlighted Text List</b><br><br>';
-    if (localStorage.getItem('hlTextList') !== null) {
-      var hlTextList = ds.lsto.load('hlTextList');
-      console.debug("desc|hlTextList:", hlTextList.length);
-      for(var i=0, l=hlTextList.length; i<l; i++){
-      console.debug("desc|hlTextList:", hlTextList);
-        var hlText = hlTextList[i];
-        console.debug("desc|hlText:", hlText);
-        htlHTML += '- '+ hlText[1] + '<br><br>';
+    (function showHlTextList(){
+      $innerMod.empty();
+      $innerMod.append('<b>Highlighted Text List</b><br><br>');
+      if (localStorage.getItem('hlTextList') !== null) {
+        var hlTextList = ds.lsto.load('hlTextList');
+        for(var i=0, l=hlTextList.length; i<l; i++){
+          var hlText = hlTextList[i];
+          console.debug("desc|hlText:", hlText);
+          $innerMod.append('- '+ hlText[1] + '<br>');
+          delBtnEl = document.createElement('button');
+          delBtnEl.value = hlText[0];
+          delBtnEl.textContent = 'DELETE';
+          // delbtn click
+          delBtnEl.addEventListener('click', function(e){
+            console.debug("desc|e:", e.target.value);
+            // find el to delete in hl text list, del, save
+            for(var m=0, n=hlTextList.length; m<n; m++){
+              if(String(hlTextList[m][0])==e.target.value){
+                hlTextList.splice(m, 1);
+                ds.lsto.save('hlTextList', hlTextList);
+                showHlTextList();
+                break;
+              }
+            }
+          });
+          $innerMod.append(delBtnEl);
+          $innerMod.append('<br>');
+        }
       }
-    }
-    $innerMod.html(htlHTML);
+    })();
   });
   bookNavWid.$wid.append($hlTextNb);
 
