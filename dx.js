@@ -20,7 +20,7 @@ dx.setAppHomeScr = function(app, scrName) {
 }
 
 dx.runApp = function(app) {
-  // localStorage.clear();
+  localStorage.clear();
   if (localStorage.getItem('curScrName')) {
     var curScr = app.screens[ds.lsto.load('curScrName')];
     dx.gotoScr(curScr);

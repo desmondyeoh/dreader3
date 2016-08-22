@@ -153,7 +153,7 @@ pageWid.loadWid = function() {
   function getBookTextDone(){
     
     showPPTWordByWord();
-    bindWordDictionary();
+    bindWordEvents();
 
     function showPPTWordByWord() {
       console.debug("desc|book:", book);
@@ -167,7 +167,7 @@ pageWid.loadWid = function() {
       }
     }
 
-    function bindWordDictionary() {
+    function bindWordEvents() {
       // delay binding click to prevent auto dictionary search
       setTimeout(function(){
         $('.word').off('click');
@@ -239,14 +239,15 @@ pageWid.loadWid = function() {
               }
 
               // update inner-top-panel
-              var hlTextList = ds.lsto.load('hlTextList') || [];
-              hlTextList.push([firstWordPos, hlText]);
-              hlTextList.sort(function(a,b){
+              var localBookDict = ds.lsto.load('localBookDict');
+              book.hlTextList.push([firstWordPos, hlText]);
+              book.hlTextList.sort(function(a,b){
                 if(a[0] > b[0]) return 1;
                 else return -1;
               });
-              ds.lsto.save('hlTextList', hlTextList);
-              console.debug("desc|hlTextList:", hlTextList);
+              localBookDict[bookFilename] = book;
+              ds.lsto.save('localBookDict', localBookDict);
+              console.debug("desc|hlTextList:", book.hlTextList);
               var panelHTML = '<b>Highlighted Text</b></br>' + hlText;
               $('#inner-top-panel').html(panelHTML);
               
@@ -302,7 +303,7 @@ pageWid.loadWid = function() {
                 }
               }
             $panel.html(panelHTML);
-            bindWordDictionary(); 
+            bindWordEvents(); 
             }); // end defineWord callback
           } // end "not highlight"
         }); // end word click handler
@@ -311,20 +312,28 @@ pageWid.loadWid = function() {
 
     // bind page events
     $page.hammer().on('swipeleft', function(){
-      if ( book.paperclip < book.pages.length) book.paperclip++;
-      var localBookDict = ds.lsto.load('localBookDict');
-      localBookDict[bookFilename] = book;
-      ds.lsto.save('localBookDict', localBookDict);
-      showPPTWordByWord();
-      bindWordDictionary();
+      if ( book.paperclip < book.pages.length) {
+        // reload book
+        var localBookDict = ds.lsto.load('localBookDict');
+        book = localBookDict[bookFilename];
+        book.paperclip++;
+        localBookDict[bookFilename] = book;
+        ds.lsto.save('localBookDict', localBookDict);
+        showPPTWordByWord();
+        bindWordEvents();
+      }
     });
     $page.hammer().on('swiperight', function(){
-      if ( book.paperclip > 1 ) book.paperclip--;
-      var localBookDict = ds.lsto.load('localBookDict');
-      localBookDict[bookFilename] = book;
-      ds.lsto.save('localBookDict', localBookDict);
-      showPPTWordByWord();
-      bindWordDictionary();
+      if ( book.paperclip > 1 ) {
+        // reload book;
+        var localBookDict = ds.lsto.load('localBookDict');
+        book = localBookDict[bookFilename];
+        book.paperclip--;
+        localBookDict[bookFilename] = book;
+        ds.lsto.save('localBookDict', localBookDict);
+        showPPTWordByWord();
+        bindWordEvents();
+      }
     });
   }
 }
@@ -367,31 +376,36 @@ bookNavWid.loadWid = function() {
     (function showHlTextList(){
       $innerMod.empty();
       $innerMod.append('<b>Highlighted Text List</b><br><br>');
-      if (localStorage.getItem('hlTextList') !== null) {
-        var hlTextList = ds.lsto.load('hlTextList');
-        for(var i=0, l=hlTextList.length; i<l; i++){
-          var hlText = hlTextList[i];
-          console.debug("desc|hlText:", hlText);
-          $innerMod.append(hlText[1] + '<br>');
-          delBtnEl = document.createElement('button');
-          delBtnEl.value = hlText[0];
-          delBtnEl.textContent = 'Del';
-          // delbtn click
-          delBtnEl.addEventListener('click', function(e){
-            console.debug("desc|e:", e.target.value);
-            // find el to delete in hl text list, del, save
-            for(var m=0, n=hlTextList.length; m<n; m++){
-              if(String(hlTextList[m][0])==e.target.value){
-                hlTextList.splice(m, 1);
-                ds.lsto.save('hlTextList', hlTextList);
-                showHlTextList();
-                break;
-              }
+      var bookFilename = ds.lsto.load('curBookFilename');
+      var localBookDict = ds.lsto.load('localBookDict');
+      console.debug("desc|localBookDict:", localBookDict);
+      var book = localBookDict[bookFilename];
+      var hlTextList = book.hlTextList;
+      for(var i=0, l=hlTextList.length; i<l; i++){
+        var hlText = hlTextList[i];
+        console.debug("desc|hlText:", hlText);
+        $innerMod.append(hlText[1] + '<br>');
+        delBtnEl = document.createElement('button');
+        delBtnEl.value = hlText[0];
+        delBtnEl.textContent = 'Del';
+        // delbtn click
+        delBtnEl.addEventListener('click', function(e){
+          console.debug("desc|e:", e.target.value);
+          // find el to delete in hl text list, del, save
+          for(var m=0, n=hlTextList.length; m<n; m++){
+            if(String(hlTextList[m][0])==e.target.value){
+              hlTextList.splice(m, 1);
+              console.debug("desc|book:", book);
+              console.debug("desc|localBookDict:", localBookDict);
+              ds.lsto.save('localBookDict', localBookDict);
+              console.debug("desc|ds.lsto.load('localBookDict'):", ds.lsto.load('localBookDict'));
+              showHlTextList();
+              break;
             }
-          });
-          $innerMod.append(delBtnEl);
-          $innerMod.append('<br><br>');
-        }
+          }
+        });
+        $innerMod.append(delBtnEl);
+        $innerMod.append('<br><br>');
       }
     })();
   });

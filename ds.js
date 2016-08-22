@@ -116,6 +116,8 @@ ds.BookServer = function (book_folder_url){
 }
 
 
+
+
 /* Dictionary
 *****************************************/
 ds.Dictionary = function() {
@@ -280,6 +282,7 @@ ds.model.Book = function(filename, text) {
   this.viewportSize = {x: $(window).outerWidth(), y: $(window).outerHeight()};
   this.text = text;
   this.pages = []; 
+  this.hlTextList = [];
   this.paperclip = 1;
 
   this.getPPT = function(){
