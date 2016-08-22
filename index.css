@@ -17,11 +17,13 @@
   height: 100%;
   background:rgba(0,0,0,0.3);
 }
-#close-mod-btn{
+#close-mod-btn img{
   position: fixed;
   top:5vh;
   right:5vw;
-  background:red;
+  width: 5vw;
+  margin: 15px 20px 0 0 ;
+  background:white;
 }
 #mod{
   border-radius: 10px;

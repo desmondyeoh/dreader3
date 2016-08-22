@@ -174,16 +174,22 @@ dh.getChildSize = function (child, parentFrm, parentSize) {
 dh.initMod = function(){
   $outerMod = $('<div id="outer-mod">')
   $outerMod.hide();
-  $closeModBtn = $('<div id="close-mod-btn">X</div>');
+  
   $mod = $('<div id="mod">');
   $mod.allowScrollingY();
-  $innerMod = $('<div id="inner-mod">');
-  $outerMod.append($mod);
-  $outerMod.append($closeModBtn);
-  $mod.append($innerMod);
   $mod.hammer().on('swipe', function(e) {
     $outerMod.hide();
   });
+  $innerMod = $('<div id="inner-mod">');
+  $mod.append($innerMod);
+  $outerMod.append($mod);
+
+  $closeModBtn = $('<div id="close-mod-btn"><img src="icons/closebtn3.svg"></div>');
+  $closeModBtn.hammer().on('tap', function(e){
+    $outerMod.hide();
+  });
+  $outerMod.append($closeModBtn);
+
   $('body').append($outerMod);
 }
 
