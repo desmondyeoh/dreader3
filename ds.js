@@ -122,7 +122,7 @@ ds.loadBook = function(){
 }
 
 ds.saveBook = function(newBook) {
-  var localBookDict = localStorage.getItem('localBookDict') || {};
+  var localBookDict = JSON.parse(localStorage.getItem('localBookDict')) || {};
   localBookDict[newBook.bookFilename] = newBook;
   localStorage.setItem('localBookDict', JSON.stringify(localBookDict));
 }

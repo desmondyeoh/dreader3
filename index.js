@@ -91,12 +91,12 @@ pageWid.loadWid = function() {
   if (typeof pageWid.frm.scr.opt !== 'undefined'){
     console.debug("coming from lib");
     bookFilename = pageWid.frm.scr.opt.bookFilename;
-    ds.lsto.save('curBookFilename', bookFilename);
+    localStorage.setItem('curBookFilename', bookFilename);
   }
   // else, if user is reading, get bookFilename from local storage
   else if (localStorage.getItem('curBookFilename')) {
     console.debug("currently reading");
-    bookFilename = ds.lsto.load('curBookFilename');
+    bookFilename = localStorage.getItem('curBookFilename');
   }
 
   // getting book text
@@ -119,9 +119,7 @@ pageWid.loadWid = function() {
       pg.setContainer($page);
       pg.paginate(book);
       ds.repositionPaperclip(book, oldNumPages);
-      var localBookDict = ds.lsto.load('localBookDict') || {};
-      localBookDict[bookFilename] = book;
-      ds.lsto.save('localBookDict', localBookDict);
+      ds.saveBook(book);
       ds.lsto.save('oldVps', ds.getVps());
       getBookTextDone();
       // clear highlight stuff
@@ -137,14 +135,12 @@ pageWid.loadWid = function() {
     console.debug("book not saved locally");
     var bs = new ds.BookServer(window.location.href+'books');
     bs.loadBookText(bookFilename, function(bookText){
-      ds.lsto.save('curBookFilename', bookFilename);
+      localStorage.setItem('curBookFilename', bookFilename);
       book = new ds.model.Book(bookFilename, bookText);
       var pg = new ds.Paginator();
       pg.setContainer($page);
       pg.paginate(book);
-      var localBookDict = ds.lsto.load('localBookDict') || {};
-      localBookDict[bookFilename] = book;
-      ds.lsto.save('localBookDict', localBookDict);
+      ds.saveBook(book);
       ds.lsto.save('oldVps', ds.getVps());
       getBookTextDone();
     });
@@ -239,14 +235,12 @@ pageWid.loadWid = function() {
               }
 
               // update inner-top-panel
-              var localBookDict = ds.lsto.load('localBookDict');
               book.hlTextList.push([firstWordPos, hlText]);
               book.hlTextList.sort(function(a,b){
                 if(a[0] > b[0]) return 1;
                 else return -1;
               });
-              localBookDict[bookFilename] = book;
-              ds.lsto.save('localBookDict', localBookDict);
+              ds.saveBook(book);
               console.debug("desc|hlTextList:", book.hlTextList);
               var panelHTML = '<b>Highlighted Text</b></br>' + hlText;
               $('#inner-top-panel').html(panelHTML);
@@ -313,12 +307,10 @@ pageWid.loadWid = function() {
     // bind page events
     $page.hammer().on('swipeleft', function(){
       if ( book.paperclip < book.pages.length) {
-        // reload book
-        var localBookDict = ds.lsto.load('localBookDict');
-        book = localBookDict[bookFilename];
+        // reload book;
+        book = ds.loadBook();
         book.paperclip++;
-        localBookDict[bookFilename] = book;
-        ds.lsto.save('localBookDict', localBookDict);
+        ds.saveBook(book);
         showPPTWordByWord();
         bindWordEvents();
       }
@@ -326,11 +318,9 @@ pageWid.loadWid = function() {
     $page.hammer().on('swiperight', function(){
       if ( book.paperclip > 1 ) {
         // reload book;
-        var localBookDict = ds.lsto.load('localBookDict');
-        book = localBookDict[bookFilename];
+        book = ds.loadBook();
         book.paperclip--;
-        localBookDict[bookFilename] = book;
-        ds.lsto.save('localBookDict', localBookDict);
+        ds.saveBook(book);
         showPPTWordByWord();
         bindWordEvents();
       }
@@ -375,11 +365,8 @@ bookNavWid.loadWid = function() {
     $innerMod = $('#inner-mod');
     (function showHlTextList(){
       $innerMod.empty();
-      $innerMod.append('<b>Highlighted Text List</b><br><br>');
-      var bookFilename = ds.lsto.load('curBookFilename');
-      var localBookDict = ds.lsto.load('localBookDict');
-      console.debug("desc|localBookDict:", localBookDict);
-      var book = localBookDict[bookFilename];
+      $innerMod.append('<b>Ideas</b><br><br>');
+      var book = ds.loadBook();
       var hlTextList = book.hlTextList;
       for(var i=0, l=hlTextList.length; i<l; i++){
         var hlText = hlTextList[i];
@@ -396,9 +383,7 @@ bookNavWid.loadWid = function() {
             if(String(hlTextList[m][0])==e.target.value){
               hlTextList.splice(m, 1);
               console.debug("desc|book:", book);
-              console.debug("desc|localBookDict:", localBookDict);
-              ds.lsto.save('localBookDict', localBookDict);
-              console.debug("desc|ds.lsto.load('localBookDict'):", ds.lsto.load('localBookDict'));
+              ds.saveBook(book);
               showHlTextList();
               break;
             }
