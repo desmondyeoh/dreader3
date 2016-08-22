@@ -333,12 +333,12 @@ bookNavWid.loadWid = function() {
   bookNavWid.$wid.addClass('navbar');
 
   // goLib
-  $goLibNb = $('<div class="navbtn">goLib</div>');
+  $goLibNb = $('<div class="navbtn">Library</div>');
   $goLibNb.hammer().on('click', function(){dx.gotoScr(libScr)});
   bookNavWid.$wid.append($goLibNb);
 
   // hlt
-  $hltNb = $('<div class="navbtn" id="hltNb">hlt</div>');
+  $hltNb = $('<div class="navbtn" id="hltNb">HiLite</div>');
   if (localStorage.getItem('isHlMode')){
     $hltNb.css({'background':'yellow'});
   };
@@ -358,14 +358,14 @@ bookNavWid.loadWid = function() {
   bookNavWid.$wid.append($hltNb);
 
   // hlText
-  $hlTextNb = $('<div class="navbtn" id="hlTextNb">hlText</div>');
+  $hlTextNb = $('<div class="navbtn" id="hlTextNb">HiLites</div>');
   $hlTextNb.hammer().on('click',  function(e) {
     console.debug("clicked");
     $('#mod').show();
     $innerMod = $('#inner-mod');
     (function showHlTextList(){
       $innerMod.empty();
-      $innerMod.append('<b>Ideas</b><br><br>');
+      $innerMod.append('<b>HiLites</b><br><br>');
       var book = ds.loadBook();
       var hlTextList = book.hlTextList;
       for(var i=0, l=hlTextList.length; i<l; i++){
