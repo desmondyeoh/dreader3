@@ -20,7 +20,7 @@ dx.setAppHomeScr = function(app, scrName) {
 }
 
 dx.runApp = function(app) {
-  localStorage.clear();
+  // localStorage.clear();
   if (localStorage.getItem('curScrName')) {
     var curScr = app.screens[ds.lsto.load('curScrName')];
     dx.gotoScr(curScr);
@@ -172,15 +172,19 @@ dh.getChildSize = function (child, parentFrm, parentSize) {
 }
 
 dh.initMod = function(){
+  $outerMod = $('<div id="outer-mod">')
+  $outerMod.hide();
+  $closeModBtn = $('<div id="close-mod-btn">X</div>');
   $mod = $('<div id="mod">');
-  $innerMod = $('<div id="inner-mod">');
   $mod.allowScrollingY();
+  $innerMod = $('<div id="inner-mod">');
+  $outerMod.append($mod);
+  $outerMod.append($closeModBtn);
   $mod.append($innerMod);
-  $mod.hide();
   $mod.hammer().on('swipe', function(e) {
-    $mod.hide();
+    $outerMod.hide();
   });
-  $('body').append($mod);
+  $('body').append($outerMod);
 }
 
 //////////////////////////////////////////
