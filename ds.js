@@ -115,7 +115,17 @@ ds.BookServer = function (book_folder_url){
   }
 }
 
+ds.loadBook = function(){
+  return JSON.parse(localStorage.getItem('localBookDict'))[
+    localStorage.getItem('curBookFilename')
+    ];
+}
 
+ds.saveBook = function(newBook) {
+  var localBookDict = localStorage.getItem('localBookDict') || {};
+  localBookDict[newBook.bookFilename] = newBook;
+  localStorage.setItem('localBookDict', JSON.stringify(localBookDict));
+}
 
 
 /* Dictionary

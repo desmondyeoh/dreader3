@@ -1,6 +1,12 @@
+
 QUnit.test( "hello test", function( assert ) {
   assert.ok( 1 == "1", "Passed!" );
 });
+
+
+//////////////////////////////////////////
+// dxtests
+//////////////////////////////////////////
 
 QUnit.test("createApp", function( assert ){
   var app = dx.createApp();
@@ -103,8 +109,31 @@ QUnit.test("test type", function( assert ){
   assert.deepEqual(frm.type, 'horiFrm');
 });
 
+
+//////////////////////////////////////////
+// dstests
+//////////////////////////////////////////
+
 QUnit.test("test getViewportSize", function( assert ){
-  var vps = dh.getVps();
+  var vps = ds.getVps();
   assert.deepEqual(vps.height, $(window).height());
   assert.deepEqual(vps.width, $(window).width());
+});
+
+QUnit.test("test loadBook", function( assert ){
+  localStorage.clear();
+  localStorage.setItem('localBookDict', JSON.stringify({'dummyBook':'content'}));
+  localStorage.setItem('curBookFilename', 'dummyBook') ;
+  assert.deepEqual(ds.loadBook(), 'content');
+  localStorage.clear();
+});
+
+QUnit.test("test saveBook", function( assert ){
+  localStorage.clear();
+  book = {'bookFilename':'dummyBookFilename'};
+  ds.saveBook(book);
+  assert.deepEqual(
+    JSON.parse(localStorage.getItem('localBookDict'))['dummyBookFilename'], 
+    book
+  );
 });
