@@ -131,8 +131,6 @@ ds.saveBook = function(newBook) {
 /* Dictionary
 *****************************************/
 ds.Dictionary = function() {
-  var api_key = "?key="+"8d3c1550-6d45-4b66-adb9-c6772066a68c";
-  var website = "http://www.dictionaryapi.com/api/v1/references/collegiate/xml/";
 
   this.createEntryList = function(data_xml) {
     console.debug("DATA", data_xml);
