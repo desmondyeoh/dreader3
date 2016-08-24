@@ -333,12 +333,12 @@ bookNavWid.loadWid = function() {
   bookNavWid.$wid.addClass('navbar');
 
   // goLib
-  var $goLibNb = $('<div class="navbtn"><img src="/icons/lib.svg"/></div>');
+  var $goLibNb = $('<div class="navbtn"><img src="'+window.location.href+'/icons/lib.svg"/></div>');
   $goLibNb.hammer().on('click', function(){dx.gotoScr(libScr)});
   bookNavWid.$wid.append($goLibNb);
 
   // hlt
-  var $hltNb = $('<div class="navbtn" id="hlt-nb"><img src="/icons/hlite.svg"/></div>');
+  var $hltNb = $('<div class="navbtn" id="hlt-nb"><img src="'+window.location.href+'/icons/hlite.svg"/></div>');
   if (localStorage.getItem('isHlMode')){
     $hltNb.css({'background':'yellow'});
   };
@@ -358,7 +358,7 @@ bookNavWid.loadWid = function() {
   bookNavWid.$wid.append($hltNb);
 
   // hlText
-  var $hlTextNb = $('<div class="navbtn" id="hl-text-nb"><img src="/icons/hlited.svg"/></div>');
+  var $hlTextNb = $('<div class="navbtn" id="hl-text-nb"><img src="'+window.location.href+'/icons/hlited.svg"/></div>');
   $hlTextNb.hammer().on('click',  function(e) {
     console.debug("clicked");
     $('#outer-mod').show();
@@ -397,16 +397,10 @@ bookNavWid.loadWid = function() {
   bookNavWid.$wid.append($hlTextNb);
 
   // goPage
-  var $goPageNb = $('<div class="navbtn" id="go-page-nb"><img src="/icons/gotopage.svg"/></div>');
-  var $pageRangeInput = $('<div class="outer-pri"><input type="range" class="page-range-input" min=1></div>');
-  $('body').append($pageRangeInput);
+  var $goPageNb = $('<div class="navbtn" id="go-page-nb"><img src="'+window.location.href+'/icons/gotopage.svg"/></div>');
   $goPageNb.hammer().on('tap', function(e){
+    var binSearchPanel = $('<div id="bin-search-panel">');
     var book = ds.loadBook();
-    $('#page-range-input').
-      attr('max', book.pages.length).
-      attr('defaultValue', book.paperclip).
-      show();
-
   });
   bookNavWid.$wid.append($goPageNb);
 
