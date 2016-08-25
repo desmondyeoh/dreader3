@@ -83,8 +83,10 @@ panelWid.loadWid = function() {
 pageWid.loadWid = function() {
   var book = {};
   var bookFilename = '';
-  var $page = $('<div id="inner-page">');
-  pageWid.$wid.append($page);
+  var $progressBar = $('<div id="progress-bar">23.3%</div>');
+  pageWid.$wid.append($progressBar);
+  var $innerPage = $('<div id="inner-page">');
+  pageWid.$wid.append($innerPage);
 
   // getting book filename
   // if coming from lib, get bookFilename
@@ -116,7 +118,7 @@ pageWid.loadWid = function() {
       book = ds.lsto.load('localBookDict')[bookFilename];
       var oldNumPages = book.pages.length;
       var pg = new ds.Paginator();
-      pg.setContainer($page);
+      pg.setContainer($innerPage);
       pg.paginate(book);
       ds.repositionPaperclip(book, oldNumPages);
       ds.saveBook(book);
@@ -131,14 +133,14 @@ pageWid.loadWid = function() {
   // if book not saved locally, load book from server 
   // then save filename; create, paginate, save book; save vps
   else {
-    $page.html('<span style="font-size:0.4em">Loading <b>'+bookFilename+'</b> from the server.<br>This might take a while the first time.<br> Please be patient :)</span>');
+    $innerPage.html('<span style="font-size:0.4em">Loading <b>'+bookFilename+'</b> from the server.<br>This might take a while the first time.<br> Please be patient :)</span>');
     console.debug("book not saved locally");
     var bs = new ds.BookServer(window.location.href+'books');
     bs.loadBookText(bookFilename, function(bookText){
       localStorage.setItem('curBookFilename', bookFilename);
       book = new ds.model.Book(bookFilename, bookText);
       var pg = new ds.Paginator();
-      pg.setContainer($page);
+      pg.setContainer($innerPage);
       pg.paginate(book);
       ds.saveBook(book);
       ds.lsto.save('oldVps', ds.getVps());
@@ -148,18 +150,25 @@ pageWid.loadWid = function() {
 
   function getBookTextDone(){
     
+    updateProgress();
     showPPTWordByWord();
     bindWordEvents();
+
+    function updateProgress() {
+      // var percent = parseFloat(Math.round(book.paperclip/book.pages.length*10000)/100).toFixed(2);
+      var fraction = book.paperclip + ' / '+book.pages.length;
+      $('#progress-bar').text(fraction);
+    }
 
     function showPPTWordByWord() {
       console.debug("showPPTWordByWord|book:", book);
       var words = ds.getBookPPT(book).trim().replace("\n", "").split(" ");
-      $page.empty();
+      $innerPage.empty();
       for (var i = 0, l = words.length; i < l; i++) {
         var word = words[i];
         var $word = $('<span class="word pageword" id="w'+i+'">'+word+'</span>');
-        $page.append($word);
-        $page.append(' ');
+        $innerPage.append($word);
+        $innerPage.append(' ');
       }
     }
 
@@ -305,22 +314,24 @@ pageWid.loadWid = function() {
     }
 
     // bind page events
-    $page.hammer().on('swipeleft', function(){
+    $innerPage.hammer().on('swipeleft', function(){
       if ( book.paperclip < book.pages.length) {
         // reload book;
         book = ds.loadBook();
         book.paperclip++;
         ds.saveBook(book);
+        updateProgress();
         showPPTWordByWord();
         bindWordEvents();
       }
     });
-    $page.hammer().on('swiperight', function(){
+    $innerPage.hammer().on('swiperight', function(){
       if ( book.paperclip > 1 ) {
         // reload book;
         book = ds.loadBook();
         book.paperclip--;
         ds.saveBook(book);
+        updateProgress();
         showPPTWordByWord();
         bindWordEvents();
       }
